@@ -9,8 +9,10 @@
 		scrollMessages,
 		ulMessages,
 		txtMessage,
-		serverUrl = "https://the-not-so-mmo.herokuapp.com";
-		//serverUrl = "http://localhost:3000";
+		isWindowFocused,
+		pageTitleText,
+		//serverUrl = "https://the-not-so-mmo.herokuapp.com";
+		serverUrl = "http://localhost:3000";
 
 	init();
 
@@ -19,6 +21,9 @@
 		scrollMessages = document.getElementById("scrollMessages");
 		ulMessages = document.getElementById("ulMessages");
 		txtMessage = document.getElementById("txtMessage");
+		isWindowFocused = true;
+		pageTitleText = "The Not So MMO GAME";
+		document.title = pageTitleText
 		
 		ctx = canvas.getContext("2d");
 
@@ -26,8 +31,8 @@
 
 		keyboard = new Keyboard(sendMessage);
 
-		var startX = Math.round(Math.random() * (canvas.width - 5)),
-			startY = Math.round(Math.random() * (canvas.height - 5));
+		var startX = 100,
+			startY = 100;
 
 		var playerName = prompt("What's your name?");
 
@@ -47,6 +52,7 @@
 		window.addEventListener("keyup", onKeyup, false);
 		window.addEventListener("resize", onResize, false);
 		window.addEventListener("blur", onWindowBlur, false);
+		window.addEventListener("focus", onWindowFocus, false);
 
 		socket.on("connect", onSocketConnected);
 		socket.on("disconnect", onSocketDisconnect);
@@ -70,9 +76,17 @@
 		};
 	};
 
+
+
 	function onWindowBlur(e) {
+		isWindowFocused = false;
 		//evita que o player ande infinitamente se o browser perder o foco com uma tecla clicada
 		keyboard.clearPressedKeys();
+	}
+
+	function onWindowFocus(e) {
+		isWindowFocused = true;
+		document.title = pageTitleText;
 	}
 
 	function onResize() {
@@ -108,6 +122,10 @@
 		ulMessages.appendChild(li);
 		
 		scrollToLastMessages();
+
+		if(!isWindowFocused) {
+			document.title = "* " + pageTitleText;
+		}
 	}
 
 	function scrollToLastMessages() {
