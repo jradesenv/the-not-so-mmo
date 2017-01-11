@@ -11,8 +11,8 @@
 		txtMessage,
 		isWindowFocused,
 		pageTitleText,
-		//serverUrl = "https://the-not-so-mmo.herokuapp.com";
-		serverUrl = "http://localhost:3000";
+		serverUrl = "https://the-not-so-mmo.herokuapp.com";
+		//serverUrl = "http://localhost:3000";
 
 	init();
 
