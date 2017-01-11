@@ -6,7 +6,7 @@
 		localPlayer,
 		remotePlayers,
 		socket,
-		serverUrl = "http://localhost:3000";
+		serverUrl = "https://the-not-so-mmo.herokuapp.com";
 
 	init();
 
