@@ -112,7 +112,7 @@
 	}
 
 	function onNewMessage(data) {
-		var msg = "<b>" + data.name + " diz: </b>" + data.msg;
+		var msg = "<b>[ " + data.name + " ] diz: </b>" + data.msg;
 		if(data.adm) {
 			msg = "<font color='red'>" + msg + "</font>";
 		}
