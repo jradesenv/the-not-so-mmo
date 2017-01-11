@@ -1,12 +1,13 @@
-function Keyboard(up, left, right, down) {
+function Keyboard(sendMessage) {
 	var _self = this;
-	_self.up = up || false;
-	_self.left = left || false;
-	_self.right = right || false;
-	_self.down = down || false;
+	_self.up = false;
+	_self.left = false;
+	_self.right = false;
+	_self.down = false;
 	_self.onKeyUp = onKeyUp;
 	_self.onKeyDown = onKeyDown;
 	_self.clearPressedKeys = clearPressedKeys;
+	_self.sendMessage = sendMessage;
 
 	function clearPressedKeys() {
 		console.log("clearPressedKeys");
@@ -30,6 +31,9 @@ function Keyboard(up, left, right, down) {
 				break;
 			case 40: // Down
 				_self.down = true;
+				break;
+			case 13:
+				_self.sendMessage();
 				break;
 		};
 	}

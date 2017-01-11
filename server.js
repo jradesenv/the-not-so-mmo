@@ -35,6 +35,7 @@ function onSocketConnection(client) {
     client.on("disconnect", onClientDisconnect);
     client.on("new-player", onNewPlayer);
     client.on("move-player", onMovePlayer);
+    client.on("new-message", onNewMessage);
 }
 
 function onClientDisconnect() {
@@ -47,6 +48,16 @@ function onClientDisconnect() {
 
     players.splice(players.indexOf(removePlayer), 1);
     this.broadcast.emit("remove-player", { id: this.id });
+
+    sendMessage(this, {
+        name: "SERVIDOR",
+        msg: "Jogador [" + removePlayer.name + "] saiu.",
+        adm: true
+    });
+}
+
+function sendMessage(socket, msgData) {
+    socket.broadcast.emit("new-message", msgData);
 }
 
 function onNewPlayer(data) {
@@ -59,6 +70,12 @@ function onNewPlayer(data) {
     };
 
     players.push(newPlayer);
+
+    sendMessage(this, {
+        name: "SERVIDOR",
+        msg: "Jogador [" + newPlayer.name + "] entrou.",
+        adm: true
+    });
 }
 
 function onMovePlayer(data) {
@@ -72,6 +89,10 @@ function onMovePlayer(data) {
     movePlayer.setY(data.y);
 
     this.broadcast.emit("move-player", { id: movePlayer.id, x: movePlayer.getX(), y: movePlayer.getY() });
+}
+
+function onNewMessage(data) {
+    sendMessage(this, data);
 }
 
 function playerById(id) {

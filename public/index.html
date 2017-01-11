@@ -1,19 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 
-	<head>
-		<title>The Not So MMO</title>
-		<meta charset="utf-8">
-		<link rel="stylesheet" href="style/game.css">
-	</head>
-	
-	<body>
-		<canvas id="gameCanvas"></canvas>
-		<script src="js/requestAnimationFrame.js"></script>
-		<script src="js/Keyboard.js"></script>
-		<script src="js/Player.js"></script>
-		<script src="js/game.js"></script>
-		<!--<script src="http://localhost:3000/socket.io/socket.io.js"></script>-->
-		<script src="https://the-not-so-mmo.herokuapp.com/socket.io/socket.io.js"></script>
-	</body>
+<head>
+	<title>The Not So MMO</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style/game.css">
+</head>
+
+<body>
+	<canvas id="gameCanvas">
+	</canvas>
+	<div id="chat">
+		<h4>Bate-papo UOL (tecle ENTER para enviar):</h4>
+		<div id="scrollMessages">
+			<ul id="ulMessages">
+			</ul>
+		</div>
+		<div id="divNewMessage">
+			<input type="text" id="txtMessage" />
+		</div>
+	</div>
+	<script src="js/requestAnimationFrame.js"></script>
+	<script src="js/Keyboard.js"></script>
+	<script src="js/Player.js"></script>
+	<script src="js/game.js"></script>
+	<!--<script src="http://localhost:3000/socket.io/socket.io.js"></script>-->
+	<script src="https://the-not-so-mmo.herokuapp.com/socket.io/socket.io.js"></script>
+</body>
+
 </html>

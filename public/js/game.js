@@ -6,17 +6,25 @@
 		localPlayer,
 		remotePlayers,
 		socket,
+		scrollMessages,
+		ulMessages,
+		txtMessage,
 		serverUrl = "https://the-not-so-mmo.herokuapp.com";
+		//serverUrl = "http://localhost:3000";
 
 	init();
 
 	function init() {
 		canvas = document.getElementById("gameCanvas");
+		scrollMessages = document.getElementById("scrollMessages");
+		ulMessages = document.getElementById("ulMessages");
+		txtMessage = document.getElementById("txtMessage");
+		
 		ctx = canvas.getContext("2d");
 
 		onResize();
 
-		keyboard = new Keyboard();
+		keyboard = new Keyboard(sendMessage);
 
 		var startX = Math.round(Math.random() * (canvas.width - 5)),
 			startY = Math.round(Math.random() * (canvas.height - 5));
@@ -45,6 +53,7 @@
 		socket.on("new-player", onNewPlayer);
 		socket.on("move-player", onMovePlayer);
 		socket.on("remove-player", onRemovePlayer);
+		socket.on("new-message", onNewMessage);
 	};
 
 	function onKeydown(e) {
@@ -69,22 +78,47 @@
 	function onResize() {
 		canvas.width = window.innerWidth;
 		canvas.height = window.innerHeight;
-	};
+	}
 
 	function onSocketConnected() {
 		console.log("Connected to server");
 		socket.emit("new-player", { name: localPlayer.name, x: localPlayer.getX(), y: localPlayer.getY() });
-	};
+	}
 
 	function onSocketDisconnect() {
 		console.log("Disconnected from server");
-	};
+	}
+
+	function sendMessage() {
+		var msgData = { name: localPlayer.name, msg: txtMessage.value };
+		socket.emit("new-message", msgData);
+
+		txtMessage.value = "";
+		onNewMessage(msgData);
+	}
+
+	function onNewMessage(data) {
+		var msg = "<b>" + data.name + " diz: </b>" + data.msg;
+		if(data.adm) {
+			msg = "<font color='red'>" + msg + "</font>";
+		}
+
+		var li = document.createElement("li");
+		li.innerHTML = msg;
+		ulMessages.appendChild(li);
+		
+		scrollToLastMessages();
+	}
+
+	function scrollToLastMessages() {
+		scrollMessages.scrollTop = scrollMessages.scrollHeight;
+	}
 
 	function onNewPlayer(data) {
 		console.log("New player connected: " + data.id);
 		var newPlayer = new Player(data.id, data.name, data.x, data.y, 50, 50);
 		remotePlayers.push(newPlayer);
-	};
+	}
 
 	function onMovePlayer(data) {
 		var movePlayer = playerById(data.id);
@@ -95,7 +129,7 @@
 
 		movePlayer.setX(data.x);
 		movePlayer.setY(data.y);
-	};
+	}
 
 	function onRemovePlayer(data) {
 		var removePlayer = playerById(data.id);
@@ -105,20 +139,20 @@
 		};
 
 		remotePlayers.splice(remotePlayers.indexOf(removePlayer), 1);
-	};
+	}
 
 	function animate() {
 		update();
 		draw();
 
 		window.requestAnimFrame(animate);
-	};
+	}
 
 	function update() {
 		if (localPlayer.update(keyboard)) {
 			socket.emit("move-player", { x: localPlayer.getX(), y: localPlayer.getY() });
 		};
-	};
+	}
 
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -130,7 +164,7 @@
 		};
 
 		drawPlayerCounter();
-	};
+	}
 
 	function drawPlayerCounter() {
 		ctx.fillStyle = "#ff0000";
@@ -144,7 +178,7 @@
 		};
 
 		return false;
-	};
+	}
 
 	// function testColision(rect1, rect2) {
 	// 	if (rect1.getX() < rect2.getX() + rect2.width &&
